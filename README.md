@@ -1,5 +1,7 @@
 # API Automation Testing Framework - Online Bookstore
 
+[![ci](https://github.com/DanielDelimata/bookstore-cucumber/actions/workflows/ci.yml/badge.svg)](https://github.com/DanielDelimata/bookstore-cucumber/actions/workflows/ci.yml)
+
 ## Overview
 Comprehensive API automation testing framework for the FakeRestAPI bookstore endpoints using Java, RestAssured, JUnit,
 and Docker.
