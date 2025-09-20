@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  api-tests:
+    build: .
+    environment:
+      - BASE_URL=https://fakerestapi.azurewebsites.net
+      - TEST_ENVIRONMENT=docker
+    volumes:
+      - ./reports:/app/reports
+    networks:
+      - test-network
+
+  report-server:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./reports:/usr/share/nginx/html
+    depends_on:
+      - api-tests
+    networks:
+      - test-network
+
+networks:
+  test-network:
+    driver: bridge
