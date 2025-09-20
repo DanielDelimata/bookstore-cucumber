@@ -13,11 +13,6 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
-env:
-  BASE_URL: https://fakerestapi.azurewebsites.net
-  TEST_ENVIRONMENT: github-actions
-  LOG_LEVEL: INFO
-
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -25,18 +20,30 @@ jobs:
       - name: Clone repository
         uses: actions/checkout@v4
 
-      - name: Set up Java 21
-        uses: actions/setup-java@v4
-        with:
-          distribution: zulu
-          java-version: 21
-          cache: gradle
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-      - name: Run tests
+      - name: Build test image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          tags: bookstore-tests:ci-${{ github.sha }}
+          load: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Run tests inside container
         env:
-          BASE_URL: https://fakerestapi.azurewebsites.net
-          LOG_LEVEL: INFO
-        run: ./gradlew clean test --no-daemon --stacktrace
+          BASE_URL: ${{ vars.BASE_URL || 'https://fakerestapi.azurewebsites.net' }}
+        run: |
+          mkdir -p build/allure-results build/reports
+          docker run --rm \
+            -e BASE_URL="$BASE_URL" \
+            -v "$PWD/build/allure-results:/project/build/allure-results" \
+            -v "$PWD/build/reports:/project/build/reports" \
+            bookstore-tests:ci-${{ github.sha }}
+
 
       - name: Setup Allure History
         uses: actions/checkout@v4
@@ -64,3 +71,9 @@ jobs:
           publish_branch: gh-pages
           publish_dir: allure-history
           force_orphan: true
+
+      - name: Clean up Docker cache
+        if: always()
+        run: |
+          docker image prune -af || true
+          docker builder prune -af || true
