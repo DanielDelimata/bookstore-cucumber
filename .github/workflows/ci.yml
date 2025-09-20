@@ -1,7 +1,15 @@
 name: ci
 on:
   push:
+    branches: [ main ]
   pull_request:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 env:
   BASE_URL: https://fakerestapi.azurewebsites.net
@@ -13,40 +21,53 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Clone repository
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v4
 
       - name: Set up Java 21
-        uses: actions/setup-java@v4.5.0
+        uses: actions/setup-java@v4
         with:
+          distribution: zulu
           java-version: 21
-          cache: 'gradle'
-          distribution: 'zulu'
+          cache: gradle
 
       - name: Run tests
         env:
           BASE_URL: https://fakerestapi.azurewebsites.net
           LOG_LEVEL: INFO
-        run: ./gradlew clean test --no-daemon
+        run: ./gradlew clean test --no-daemon --stacktrace
+
+      # Artefakty z testów i Allure results (przydaje się na PR-ach)
+      - name: Upload test reports & results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-and-allure-results
+          path: |
+            build/reports/**
+            build/test-results/**
+            build/allure-results/**
+          if-no-files-found: ignore
 
       - name: Setup Allure History
-        uses: actions/checkout@v4.2.2
         if: always()
-        continue-on-error: true
+        uses: actions/checkout@v4
         with:
           ref: gh-pages
           path: gh-pages
+        continue-on-error: true
 
       - name: Generate Allure Report
-        uses: simple-elf/allure-report-action@v1.11
         if: always()
+        uses: simple-elf/allure-report-action@v1.11
         with:
           allure_results: build/allure-results
           allure_history: allure-history
+          keep_reports: 20
 
       - name: Publish Allure Report
-        if: always()
-        uses: peaceiris/actions-gh-pages@v4.0.0
+        if: always() && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          token: ${{ secrets.PERSONAL_TOKEN }}
+          github_token: ${{ secrets.PERSONAL_TOKEN }}  # <-- poprawka! zamiast "token"
           publish_branch: gh-pages
           publish_dir: allure-history
