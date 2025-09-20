@@ -1,0 +1,53 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"  To protect data consistency and the user experience,
+  the system should clearly communicate errors and block invalid operations.","290","Rejecting an attempt to add a book without required information","","Sat Sep 20 16:42:25 GMT 2025","failed","Sat Sep 20 16:42:25 GMT 2025","","System responses to exceptional situations in the book catalog","Rejecting an attempt to add a book without required information",""
+"  To protect data consistency and the user experience,
+  the system should clearly communicate errors and block invalid operations.","869","Attempting to view an author that does not exist","","Sat Sep 20 16:42:23 GMT 2025","passed","Sat Sep 20 16:42:24 GMT 2025","","System responses to exceptional situations in the author catalog","Attempting to view an author that does not exist",""
+"  In order to keep the bookstore accurate and informative,
+  as an authorized user I want to add, view, edit, and remove authors.","866","Fast end-to-end path CRUD","","Sat Sep 20 16:42:25 GMT 2025","failed","Sat Sep 20 16:42:26 GMT 2025","","Manage authors in the bookstore","Fast end-to-end path CRUD",""
+"  In order to keep the bookstore accurate and informative,
+  as an authorized user I want to add, view, edit, and remove authors.","1335","Update an author","","Sat Sep 20 16:42:23 GMT 2025","failed","Sat Sep 20 16:42:24 GMT 2025","","Manage authors in the bookstore","Update an author",""
+"  To protect data consistency and the user experience,
+  the system should clearly communicate errors and block invalid operations.","281","Rejecting an attempt to add a book without required information","","Sat Sep 20 16:42:25 GMT 2025","failed","Sat Sep 20 16:42:25 GMT 2025","","System responses to exceptional situations in the book catalog","Rejecting an attempt to add a book without required information",""
+"  To protect data consistency and the user experience,
+  the system should clearly communicate errors and block invalid operations.","1688","Attempting to view a book that does not exist","","Sat Sep 20 16:42:26 GMT 2025","passed","Sat Sep 20 16:42:27 GMT 2025","","System responses to exceptional situations in the book catalog","Attempting to view a book that does not exist",""
+"  In order to keep the bookstore accurate and up to date,
+  as an authorized user I want to add, view, edit, and remove books.","1018","Fast end-to-end path CRUD","","Sat Sep 20 16:42:25 GMT 2025","failed","Sat Sep 20 16:42:26 GMT 2025","","Manage books in the bookstore","Fast end-to-end path CRUD",""
+"  In order to keep the bookstore accurate and up to date,
+  as an authorized user I want to add, view, edit, and remove books.","3792","Remove a book","","Sat Sep 20 16:42:19 GMT 2025","failed","Sat Sep 20 16:42:23 GMT 2025","","Manage books in the bookstore","Remove a book",""
+"  To protect data consistency and the user experience,
+  the system should clearly communicate errors and block invalid operations.","277","Rejecting an attempt to add a book without required information","","Sat Sep 20 16:42:25 GMT 2025","failed","Sat Sep 20 16:42:25 GMT 2025","","System responses to exceptional situations in the book catalog","Rejecting an attempt to add a book without required information",""
+"  In order to keep the bookstore accurate and informative,
+  as an authorized user I want to add, view, edit, and remove authors.","869","View an existing author","","Sat Sep 20 16:42:24 GMT 2025","failed","Sat Sep 20 16:42:25 GMT 2025","","Manage authors in the bookstore","View an existing author",""
+"  To protect data consistency and the user experience,
+  the system should clearly communicate errors and block invalid operations.","309","Rejecting an attempt to add an author without required information","","Sat Sep 20 16:42:24 GMT 2025","failed","Sat Sep 20 16:42:24 GMT 2025","","System responses to exceptional situations in the author catalog","Rejecting an attempt to add an author without required information",""
+"  To protect data consistency and the user experience,
+  the system should clearly communicate errors and block invalid operations.","316","Attempting to view an author that does not exist","","Sat Sep 20 16:42:23 GMT 2025","passed","Sat Sep 20 16:42:23 GMT 2025","","System responses to exceptional situations in the author catalog","Attempting to view an author that does not exist",""
+"  To protect data consistency and the user experience,
+  the system should clearly communicate errors and block invalid operations.","1352","Attempting to view a book that does not exist","","Sat Sep 20 16:42:26 GMT 2025","passed","Sat Sep 20 16:42:27 GMT 2025","","System responses to exceptional situations in the book catalog","Attempting to view a book that does not exist",""
+"  To protect data consistency and the user experience,
+  the system should clearly communicate errors and block invalid operations.","4100","Idempotent removal - repeating the operation","","Sat Sep 20 16:42:19 GMT 2025","failed","Sat Sep 20 16:42:23 GMT 2025","","System responses to exceptional situations in the book catalog","Idempotent removal - repeating the operation",""
+"  In order to keep the bookstore accurate and up to date,
+  as an authorized user I want to add, view, edit, and remove books.","2012","Add a new book","","Sat Sep 20 16:42:25 GMT 2025","failed","Sat Sep 20 16:42:28 GMT 2025","","Manage books in the bookstore","Add a new book",""
+"  To protect data consistency and the user experience,
+  the system should clearly communicate errors and block invalid operations.","389","Attempting to view a book that does not exist","","Sat Sep 20 16:42:25 GMT 2025","passed","Sat Sep 20 16:42:26 GMT 2025","","System responses to exceptional situations in the book catalog","Attempting to view a book that does not exist",""
+"  In order to keep the bookstore accurate and up to date,
+  as an authorized user I want to add, view, edit, and remove books.","1331","Update a book","","Sat Sep 20 16:42:23 GMT 2025","failed","Sat Sep 20 16:42:24 GMT 2025","","Manage books in the bookstore","Update a book",""
+"  To protect data consistency and the user experience,
+  the system should clearly communicate errors and block invalid operations.","281","Rejecting an attempt to add an author without required information","","Sat Sep 20 16:42:24 GMT 2025","failed","Sat Sep 20 16:42:25 GMT 2025","","System responses to exceptional situations in the author catalog","Rejecting an attempt to add an author without required information",""
+"  To protect data consistency and the user experience,
+  the system should clearly communicate errors and block invalid operations.","1196","Rejecting an ambiguous update","","Sat Sep 20 16:42:23 GMT 2025","failed","Sat Sep 20 16:42:25 GMT 2025","","System responses to exceptional situations in the book catalog","Rejecting an ambiguous update",""
+"  In order to keep the bookstore accurate and informative,
+  as an authorized user I want to add, view, edit, and remove authors.","854","Add a new author","","Sat Sep 20 16:42:25 GMT 2025","failed","Sat Sep 20 16:42:26 GMT 2025","","Manage authors in the bookstore","Add a new author",""
+"  In order to keep the bookstore accurate and up to date,
+  as an authorized user I want to add, view, edit, and remove books.","1018","View an existing book","","Sat Sep 20 16:42:24 GMT 2025","failed","Sat Sep 20 16:42:25 GMT 2025","","Manage books in the bookstore","View an existing book",""
+"  To protect data consistency and the user experience,
+  the system should clearly communicate errors and block invalid operations.","302","Rejecting an attempt to add an author without required information","","Sat Sep 20 16:42:24 GMT 2025","failed","Sat Sep 20 16:42:24 GMT 2025","","System responses to exceptional situations in the author catalog","Rejecting an attempt to add an author without required information",""
+"  To protect data consistency and the user experience,
+  the system should clearly communicate errors and block invalid operations.","1186","Rejecting an ambiguous update","","Sat Sep 20 16:42:24 GMT 2025","failed","Sat Sep 20 16:42:25 GMT 2025","","System responses to exceptional situations in the author catalog","Rejecting an ambiguous update",""
+"  To protect data consistency and the user experience,
+  the system should clearly communicate errors and block invalid operations.","4350","Idempotent removal - repeating the operation","","Sat Sep 20 16:42:19 GMT 2025","failed","Sat Sep 20 16:42:24 GMT 2025","","System responses to exceptional situations in the author catalog","Idempotent removal - repeating the operation",""
+"  To protect data consistency and the user experience,
+  the system should clearly communicate errors and block invalid operations.","1968","Attempting to view an author that does not exist","","Sat Sep 20 16:42:21 GMT 2025","passed","Sat Sep 20 16:42:23 GMT 2025","","System responses to exceptional situations in the author catalog","Attempting to view an author that does not exist",""
+"  In order to keep the bookstore accurate and informative,
+  as an authorized user I want to add, view, edit, and remove authors.","3806","Remove an author","","Sat Sep 20 16:42:19 GMT 2025","failed","Sat Sep 20 16:42:23 GMT 2025","","Manage authors in the bookstore","Remove an author",""
