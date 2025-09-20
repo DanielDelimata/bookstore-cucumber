@@ -38,17 +38,6 @@ jobs:
           LOG_LEVEL: INFO
         run: ./gradlew clean test --no-daemon --stacktrace
 
-      - name: Upload test reports & results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-and-allure-results
-          path: |
-            build/reports/**
-            build/test-results/**
-            build/allure-results/**
-          if-no-files-found: ignore
-
       - name: Setup Allure History
         uses: actions/checkout@v4
         if: always()
@@ -66,13 +55,6 @@ jobs:
           allure_history: allure-history
           allure_report: allure-report
           keep_reports: 20
-
-      - name: Sanity check report dirs
-        if: always()
-        run: |
-          ls -la build || true
-          ls -la build/allure-results || true
-          ls -la allure-history || true
 
       - name: Publish Allure Report
         if: always() && github.event_name == 'push' && github.ref == 'refs/heads/main'
