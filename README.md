@@ -15,11 +15,11 @@ The framework supports local execution, Docker-based execution, and CI/CD integr
 
 ## Quick Start
 
-[//]: # (TODO correct repository name, add screenshots, badges, and other relevant information)
+[//]: # (TODO correct repository name, add screenshots, and other relevant information)
 ### Local Execution
 ```bash
 # Clone repository
-git clone <repository-url>
+git clone https://github.com/DanielDelimata/bookstore-cucumber.git
 cd api-automation-bookstore
 
 # Run tests
@@ -52,6 +52,8 @@ Access the report at `http://localhost:8080`.
 ### CI/CD Integration
 The project includes a GitHub Actions workflow for automated testing and Allure report generation on each push.
 The workflow is defined in `.github/workflows/ci.yml`.
+
+URL: https://DanielDelimata.github.io/bookstore-cucumber/
 
 ## Configuration
 You can customize the test execution by passing parameters via the command line or environment variables.

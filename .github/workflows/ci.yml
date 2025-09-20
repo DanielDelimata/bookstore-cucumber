@@ -49,8 +49,9 @@ jobs:
           if-no-files-found: ignore
 
       - name: Setup Allure History
-        if: always()
         uses: actions/checkout@v4
+        if: always()
+        continue-on-error: true
         with:
           ref: gh-pages
           path: gh-pages
@@ -63,6 +64,8 @@ jobs:
           allure_results: build/allure-results
           gh_pages: gh-pages
           allure_history: allure-history
+          allure_report: allure-report
+          keep_reports: 20
 
       - name: Sanity check report dirs
         if: always()
@@ -78,3 +81,4 @@ jobs:
           github_token: ${{ secrets.PERSONAL_TOKEN }}  # <-- poprawka! zamiast "token"
           publish_branch: gh-pages
           publish_dir: allure-history
+          force_orphan: true
