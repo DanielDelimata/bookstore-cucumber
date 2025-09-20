@@ -40,10 +40,11 @@ jobs:
           mkdir -p build/allure-results build/reports
           docker run --rm \
             -e BASE_URL="$BASE_URL" \
-            -v "$PWD/build/allure-results:/project/build/docker-allure-results" \
-            -v "$PWD/build/reports:/project/build/reports" \
+            -v "$PWD/build/allure-results:/app/build/allure-results" \
+            -v "$PWD/build/reports:/app/build/reports" \
             bookstore-tests:ci-${{ github.sha }}
-          ls -la build/docker-allure-results
+          echo "Host-side Allure results:"
+          ls -la build/allure-results || true
 
       - name: Setup Allure History
         uses: actions/checkout@v4
@@ -57,7 +58,7 @@ jobs:
         uses: simple-elf/allure-report-action@v1.11
         if: always()
         with:
-          allure_results: build/docker-allure-results
+          allure_results: build/allure-results
           gh_pages: gh-pages
           allure_history: allure-history
           allure_report: allure-report
