@@ -66,6 +66,12 @@ defaultTasks 'clean', 'test'
 
 test {
     useJUnitPlatform()
+
+    def allureFromSys = System.getProperty("allure.results.directory")
+    def allureFromEnv = System.getenv("ALLURE_RESULTS_DIR")
+    def allureDir = allureFromSys ?: allureFromEnv ?: "${buildDir}/allure-results"
+    systemProperty "allure.results.directory", allureDir
+
     def fromSys = System.getProperty("baseUrl")
     def fromEnv = System.getenv("BASE_URL")
     systemProperty "baseUrl", fromSys ?: fromEnv ?: "https://fakerestapi.azurewebsites.net"
