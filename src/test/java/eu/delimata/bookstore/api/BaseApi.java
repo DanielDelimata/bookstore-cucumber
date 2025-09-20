@@ -26,7 +26,6 @@ public abstract class BaseApi {
                         .httpClient(HttpClientConfig.httpClientConfig()
                                 .setParam("http.connection.timeout", 5_000)
                                 .setParam("http.socket.timeout", 10_000)))
-//                .addFilter(new HttpLogFilter())
                 .addFilter(new AllureRestAssured())
                 .log(LogDetail.URI)
                 .build();

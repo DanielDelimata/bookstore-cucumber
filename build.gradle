@@ -54,7 +54,6 @@ dependencies {
     testImplementation("org.slf4j:slf4j-simple:${slf4jVersion}")
     testImplementation("com.github.javafaker:javafaker:${fakerVersion}")
     testImplementation("com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}")
-    testImplementation("ch.qos.logback:logback-classic:${logbackVersion}")
 
     // Lombok
     compileOnly ("org.projectlombok:lombok:${lombokVersion}")

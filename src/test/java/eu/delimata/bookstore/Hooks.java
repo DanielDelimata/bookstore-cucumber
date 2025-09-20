@@ -22,8 +22,8 @@ public class Hooks {
 
     @BeforeAll
     public static void setAllureEnvironment() {
-        Properties properties = System.getProperties();
-        Map<String, String> env = new HashMap<>();
+        final Properties properties = System.getProperties();
+        final Map<String, String> env = new HashMap<>();
         properties.forEach((k, v) -> env.put((String) k, (String) v));
         AllureEnvironmentWriter.writeAllureEnvironment(env);
         RestAssured.config = RestAssured.config()
@@ -34,7 +34,6 @@ public class Hooks {
 
     @After
     public void cleanup(Scenario scenario) {
-        // Best-effort cleanup; ignore outcome to keep tests resilient
         try {
             if (world.getLastBookId() != null) {
                 world.getBooksApi().delete(world.getLastBookId());
