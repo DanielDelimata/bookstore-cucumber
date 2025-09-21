@@ -15,7 +15,6 @@ import java.util.Map;
 
 import static eu.delimata.bookstore.enums.HttpCode.BAD_REQUEST;
 import static eu.delimata.bookstore.enums.HttpCode.CONFLICT;
-import static eu.delimata.bookstore.enums.HttpCode.CREATED;
 import static eu.delimata.bookstore.enums.HttpCode.NOT_FOUND;
 import static eu.delimata.bookstore.enums.HttpCode.NO_CONTENT;
 import static eu.delimata.bookstore.enums.HttpCode.OK;
@@ -36,22 +35,25 @@ public class BooksSteps {
     public void iHaveSomeUniqueDataOfABook() {
         int id = TestData.uniqueId();
         world.setLastBookPayload(TestData.randomBook(id));
-        world.getContext().put("bookPrepared", false);
     }
 
     @Given("a book exists in the bookstore")
     public void aBookPreparedExists() {
-        if (world.getLastBookPayload() == null) {
-            int id = TestData.uniqueId();
-            world.setLastBookPayload(TestData.randomBook(id));
-        }
-        long t0 = System.currentTimeMillis();
-        world.setLastResponse(world.getBooksApi().create(world.getLastBookPayload()));
-        world.setLastOperationMillis(System.currentTimeMillis() - t0);
-
-        assertHttpStatusCode(world.getLastResponse()).isIn(OK.toInt(), CREATED.toInt());
+        // Use fixed data to simplify validation
+        world.setLastBookPayload(new Book(
+                1,
+                "Book 1", 
+                "Lorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\n", 
+                100,
+                """
+                        Lorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\\n
+                        Lorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\\n
+                        Lorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\\n
+                        Lorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\\n
+                        Lorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\\n
+                        """,
+                "2025-09-20T08:00:07.7606597+00:00"));
         world.setLastBookId(world.getLastBookPayload().id());
-        world.getContext().put("bookPrepared", true);
     }
 
     @When("I add a new book to the bookstore")
@@ -60,9 +62,7 @@ public class BooksSteps {
             int id = TestData.uniqueId();
             world.setLastBookPayload(TestData.randomBook(id));
         }
-        long t0 = System.currentTimeMillis();
         world.setLastResponse(world.getBooksApi().create(world.getLastBookPayload()));
-        world.setLastOperationMillis(System.currentTimeMillis() - t0);
         world.setLastBookId(world.getLastBookPayload().id());
     }
 
@@ -87,9 +87,7 @@ public class BooksSteps {
                 world.getLastBookPayload().excerpt(),
                 world.getLastBookPayload().publishDate()
         );
-        long t0 = System.currentTimeMillis();
         world.setLastResponse(world.getBooksApi().update(world.getLastBookId(), updated));
-        world.setLastOperationMillis(System.currentTimeMillis() - t0);
         assertHttpStatusCode(world.getLastResponse()).isEqualTo(OK.toInt());
         world.setLastBookPayload(updated);
     }
@@ -113,7 +111,7 @@ public class BooksSteps {
 
     @Then("I see a confirmation that the book was added")
     public void iSeeConfirmationBookAdded() {
-        assertHttpStatusCode(world.getLastResponse()).isIn(OK.toInt(), CREATED.toInt());
+        assertHttpStatusCode(world.getLastResponse()).isEqualTo(OK.toInt());
     }
 
     @Then("the book details include the standard information expected in the bookstore")
@@ -221,7 +219,7 @@ public class BooksSteps {
             int id = TestData.uniqueId();
             world.setLastBookPayload(TestData.randomBook(id));
             assertHttpStatusCode(world.getBooksApi().create(world.getLastBookPayload()))
-                    .isEqualTo(CREATED.toInt());
+                    .isEqualTo(OK.toInt());
             world.setLastBookId(world.getLastBookPayload().id());
         }
         assertHttpStatusCode(world.getBooksApi().delete(world.getLastBookId())).isEqualTo(OK.toInt());

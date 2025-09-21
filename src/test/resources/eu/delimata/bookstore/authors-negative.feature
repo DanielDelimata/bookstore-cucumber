@@ -1,5 +1,5 @@
 @authors @negative
-Feature: System responses to exceptional situations in the author catalog
+Feature: Edge cases for authors
   To protect data consistency and the user experience,
   the system should clearly communicate errors and block invalid operations.
 

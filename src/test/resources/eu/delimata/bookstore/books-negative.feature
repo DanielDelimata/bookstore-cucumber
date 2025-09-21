@@ -1,5 +1,5 @@
 @books @negative
-Feature: System responses to exceptional situations in the book catalog
+Feature: Edge cases for books
   To protect data consistency and the user experience,
   the system should clearly communicate errors and block invalid operations.
 

@@ -1,6 +1,5 @@
-@allure.label.epic:BookstoreManagement
-@allure.label.feature:AuthorsPositiveTests
-Feature: Manage authors in the bookstore
+@authors @positive
+Feature: Happy path for authors
   In order to keep the bookstore accurate and informative,
   as an authorized user I want to add, view, edit, and remove authors.
 

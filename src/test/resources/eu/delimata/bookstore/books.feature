@@ -1,5 +1,5 @@
 @books @positive
-Feature: Manage books in the bookstore
+Feature: Happy path for books
   In order to keep the bookstore accurate and up to date,
   as an authorized user I want to add, view, edit, and remove books.
 
