@@ -1,0 +1,53 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"  To protect data consistency and the user experience,
+  the system should clearly communicate errors and block invalid operations.","1368","Attempting to view an author that does not exist","","Sun Sep 21 08:47:35 GMT 2025","passed","Sun Sep 21 08:47:36 GMT 2025","","Edge cases for authors","Attempting to view an author that does not exist",""
+"  To protect data consistency and the user experience,
+  the system should clearly communicate errors and block invalid operations.","1333","Rejecting an ambiguous update","","Sun Sep 21 08:47:35 GMT 2025","failed","Sun Sep 21 08:47:37 GMT 2025","","Edge cases for books","Rejecting an ambiguous update",""
+"  In order to keep the bookstore accurate and up to date,
+  as an authorized user I want to add, view, edit, and remove books.","1607","Add a new book","","Sun Sep 21 08:47:38 GMT 2025","failed","Sun Sep 21 08:47:39 GMT 2025","","Happy path for books","Add a new book",""
+"  In order to keep the bookstore accurate and informative,
+  as an authorized user I want to add, view, edit, and remove authors.","904","View an existing author","","Sun Sep 21 08:47:37 GMT 2025","passed","Sun Sep 21 08:47:37 GMT 2025","","Happy path for authors","View an existing author",""
+"  To protect data consistency and the user experience,
+  the system should clearly communicate errors and block invalid operations.","444","Rejecting an attempt to add a book without required information","","Sun Sep 21 08:47:37 GMT 2025","failed","Sun Sep 21 08:47:37 GMT 2025","","Edge cases for books","Rejecting an attempt to add a book without required information",""
+"  To protect data consistency and the user experience,
+  the system should clearly communicate errors and block invalid operations.","498","Rejecting an attempt to add an author without required information","","Sun Sep 21 08:47:37 GMT 2025","failed","Sun Sep 21 08:47:37 GMT 2025","","Edge cases for authors","Rejecting an attempt to add an author without required information",""
+"  To protect data consistency and the user experience,
+  the system should clearly communicate errors and block invalid operations.","677","Attempting to view a book that does not exist","","Sun Sep 21 08:47:39 GMT 2025","passed","Sun Sep 21 08:47:40 GMT 2025","","Edge cases for books","Attempting to view a book that does not exist",""
+"  To protect data consistency and the user experience,
+  the system should clearly communicate errors and block invalid operations.","446","Rejecting an attempt to add an author without required information","","Sun Sep 21 08:47:36 GMT 2025","failed","Sun Sep 21 08:47:37 GMT 2025","","Edge cases for authors","Rejecting an attempt to add an author without required information",""
+"  In order to keep the bookstore accurate and up to date,
+  as an authorized user I want to add, view, edit, and remove books.","1380","View an existing book","","Sun Sep 21 08:47:37 GMT 2025","passed","Sun Sep 21 08:47:38 GMT 2025","","Happy path for books","View an existing book",""
+"  To protect data consistency and the user experience,
+  the system should clearly communicate errors and block invalid operations.","4269","Idempotent removal - repeating the operation","","Sun Sep 21 08:47:32 GMT 2025","failed","Sun Sep 21 08:47:36 GMT 2025","","Edge cases for authors","Idempotent removal - repeating the operation",""
+"  In order to keep the bookstore accurate and informative,
+  as an authorized user I want to add, view, edit, and remove authors.","1468","Update an author","","Sun Sep 21 08:47:35 GMT 2025","failed","Sun Sep 21 08:47:37 GMT 2025","","Happy path for authors","Update an author",""
+"  To protect data consistency and the user experience,
+  the system should clearly communicate errors and block invalid operations.","483","Rejecting an attempt to add a book without required information","","Sun Sep 21 08:47:37 GMT 2025","failed","Sun Sep 21 08:47:38 GMT 2025","","Edge cases for books","Rejecting an attempt to add a book without required information",""
+"  In order to keep the bookstore accurate and informative,
+  as an authorized user I want to add, view, edit, and remove authors.","1362","Fast end-to-end path CRUD","","Sun Sep 21 08:47:38 GMT 2025","failed","Sun Sep 21 08:47:39 GMT 2025","","Happy path for authors","Fast end-to-end path CRUD",""
+"  In order to keep the bookstore accurate and up to date,
+  as an authorized user I want to add, view, edit, and remove books.","3476","Remove a book","","Sun Sep 21 08:47:32 GMT 2025","failed","Sun Sep 21 08:47:35 GMT 2025","","Happy path for books","Remove a book",""
+"  To protect data consistency and the user experience,
+  the system should clearly communicate errors and block invalid operations.","2194","Attempting to view an author that does not exist","","Sun Sep 21 08:47:32 GMT 2025","passed","Sun Sep 21 08:47:35 GMT 2025","","Edge cases for authors","Attempting to view an author that does not exist",""
+"  To protect data consistency and the user experience,
+  the system should clearly communicate errors and block invalid operations.","3830","Idempotent removal - repeating the operation","","Sun Sep 21 08:47:32 GMT 2025","failed","Sun Sep 21 08:47:35 GMT 2025","","Edge cases for books","Idempotent removal - repeating the operation",""
+"  To protect data consistency and the user experience,
+  the system should clearly communicate errors and block invalid operations.","731","Attempting to view a book that does not exist","","Sun Sep 21 08:47:38 GMT 2025","passed","Sun Sep 21 08:47:39 GMT 2025","","Edge cases for books","Attempting to view a book that does not exist",""
+"  In order to keep the bookstore accurate and informative,
+  as an authorized user I want to add, view, edit, and remove authors.","1440","Add a new author","","Sun Sep 21 08:47:37 GMT 2025","failed","Sun Sep 21 08:47:39 GMT 2025","","Happy path for authors","Add a new author",""
+"  To protect data consistency and the user experience,
+  the system should clearly communicate errors and block invalid operations.","1334","Rejecting an ambiguous update","","Sun Sep 21 08:47:36 GMT 2025","failed","Sun Sep 21 08:47:37 GMT 2025","","Edge cases for authors","Rejecting an ambiguous update",""
+"  To protect data consistency and the user experience,
+  the system should clearly communicate errors and block invalid operations.","442","Rejecting an attempt to add a book without required information","","Sun Sep 21 08:47:38 GMT 2025","failed","Sun Sep 21 08:47:38 GMT 2025","","Edge cases for books","Rejecting an attempt to add a book without required information",""
+"  In order to keep the bookstore accurate and up to date,
+  as an authorized user I want to add, view, edit, and remove books.","1838","Fast end-to-end path CRUD","","Sun Sep 21 08:47:38 GMT 2025","failed","Sun Sep 21 08:47:40 GMT 2025","","Happy path for books","Fast end-to-end path CRUD",""
+"  In order to keep the bookstore accurate and informative,
+  as an authorized user I want to add, view, edit, and remove authors.","3475","Remove an author","","Sun Sep 21 08:47:32 GMT 2025","failed","Sun Sep 21 08:47:35 GMT 2025","","Happy path for authors","Remove an author",""
+"  To protect data consistency and the user experience,
+  the system should clearly communicate errors and block invalid operations.","517","Rejecting an attempt to add an author without required information","","Sun Sep 21 08:47:37 GMT 2025","failed","Sun Sep 21 08:47:38 GMT 2025","","Edge cases for authors","Rejecting an attempt to add an author without required information",""
+"  To protect data consistency and the user experience,
+  the system should clearly communicate errors and block invalid operations.","486","Attempting to view an author that does not exist","","Sun Sep 21 08:47:35 GMT 2025","passed","Sun Sep 21 08:47:35 GMT 2025","","Edge cases for authors","Attempting to view an author that does not exist",""
+"  In order to keep the bookstore accurate and up to date,
+  as an authorized user I want to add, view, edit, and remove books.","1726","Update a book","","Sun Sep 21 08:47:35 GMT 2025","failed","Sun Sep 21 08:47:37 GMT 2025","","Happy path for books","Update a book",""
+"  To protect data consistency and the user experience,
+  the system should clearly communicate errors and block invalid operations.","1826","Attempting to view a book that does not exist","","Sun Sep 21 08:47:38 GMT 2025","passed","Sun Sep 21 08:47:40 GMT 2025","","Edge cases for books","Attempting to view a book that does not exist",""
