@@ -187,7 +187,7 @@ public class AuthorsSteps {
         Author author = new Author(id, id, "Jane" + id, "Doe");
         assertHttpStatusCode(world.getBooksApi().create(author), OK);
 
-        var mismatched = new Author(id + 1, author.idBook(), author.firstName(), author.lastName());
+        Author mismatched = new Author(id + 1, author.idBook(), author.firstName(), author.lastName());
         world.setLastResponse(world.getAuthorsApi().update(id, mismatched));
         world.setLastAuthorId(id);
     }
