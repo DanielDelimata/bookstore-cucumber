@@ -1,0 +1,47 @@
+# ── VCS ─────────────────────────────────────────────────────────────────────────
+.git
+.git/*
+.gitattributes
+.gitignore
+
+# ── IDE / OS ───────────────────────────────────────────────────────────────────
+.idea
+.vscode
+*.iml
+*.ipr
+*.iws
+.DS_Store
+Thumbs.db
+*.swp
+
+# ── Gradle / build outputs ─────────────────────────────────────────────────────
+.gradle
+build
+out
+target
+
+# ── Raports / Allure ───────────────────────────────────────────────────────────
+allure-results
+allure-report
+allure-history
+reports
+**/allure-results
+**/allure-report
+**/allure-history
+**/reports
+
+# ── Logs / temp ────────────────────────────────────────────────────────────────
+*.log
+logs
+tmp
+temp
+*.tmp
+
+# ── docker files ───────────────────────────────────────────────────────────────
+docker-compose*.yml
+*.tar
+
+# ── Specific files not needed in the image ─────────────────────────────────────
+README.md
+screenshot.png
+.dockerignore
