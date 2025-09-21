@@ -89,7 +89,7 @@ public class BooksSteps {
                 world.getLastBookPayload().publishDate()
         );
         world.setLastResponse(world.getBooksApi().update(world.getLastBookId(), updated));
-        assertHttpStatusCode(world.getLastResponse()).isEqualTo(OK.toInt());
+        assertHttpStatusCode(world.getLastResponse(), OK);
         world.setLastBookPayload(updated);
     }
 
@@ -102,17 +102,17 @@ public class BooksSteps {
     @When("I remove that book from the bookstore")
     public void iRemoveThatBook() {
         world.setLastResponse(world.getBooksApi().delete(world.getLastBookId()));
-        assertHttpStatusCode(world.getLastResponse()).isEqualTo(OK.toInt());
+        assertHttpStatusCode(world.getLastResponse(), OK);
     }
 
     @Then("I should see that the book is no longer available to users")
     public void theBookIsNoLongerAvailable() {
-        assertHttpStatusCode(world.getLastResponse()).isEqualTo(NOT_FOUND.toInt());
+        assertHttpStatusCode(world.getLastResponse(), NOT_FOUND);
     }
 
     @Then("I see a confirmation that the book was added")
     public void iSeeConfirmationBookAdded() {
-        assertHttpStatusCode(world.getLastResponse()).isEqualTo(OK.toInt());
+        assertHttpStatusCode(world.getLastResponse(), OK);
     }
 
     @Then("the book details include title, description, page count, and publishing date")
@@ -157,8 +157,8 @@ public class BooksSteps {
             case "was already removed" -> {
                 int id = TestData.uniqueId();
                 Book book = TestData.randomBook(id);
-                assertHttpStatusCode(world.getBooksApi().create(book)).isEqualTo(OK.toInt());
-                assertHttpStatusCode(world.getBooksApi().delete(id)).isEqualTo(OK.toInt());
+                assertHttpStatusCode(world.getBooksApi().create(book), OK);
+                assertHttpStatusCode(world.getBooksApi().delete(id), OK);
                 idToUse = id;
             }
             case "never existed" -> idToUse = 999_999_999;
@@ -170,7 +170,7 @@ public class BooksSteps {
 
     @Then("the system informs me that the book item is not available")
     public void systemInformsItemNotAvailable() {
-        assertHttpStatusCode(world.getLastResponse()).isEqualTo(NOT_FOUND.toInt());
+        assertHttpStatusCode(world.getLastResponse(), NOT_FOUND);
     }
 
     @When("^I try to add a new book with missing data (.*)$")
@@ -194,14 +194,14 @@ public class BooksSteps {
 
     @Then("the addition of a book is rejected with a clear message indicating which data must be provided")
     public void additionRejectedWithClearMessage() {
-        assertHttpStatusCode(world.getLastResponse()).isIn(BAD_REQUEST.toInt(), UNPROCESSABLE_ENTITY.toInt());
+        assertHttpStatusCode(world.getLastResponse(), BAD_REQUEST, UNPROCESSABLE_ENTITY);
     }
 
     @When("I attempt to update the book in an ambiguous or inconsistent way")
     public void attemptAmbiguousUpdate() {
         int id = TestData.uniqueId();
         Book book = TestData.randomBook(id);
-        assertHttpStatusCode(world.getBooksApi().create(book)).isEqualTo(OK.toInt());
+        assertHttpStatusCode(world.getBooksApi().create(book), OK);
 
         Book mismatched = new Book(id + 1, book.title(), book.description(), book.pageCount(), book.excerpt(), book.publishDate());
         world.setLastResponse(world.getBooksApi().update(id, mismatched));
@@ -209,7 +209,7 @@ public class BooksSteps {
 
     @Then("the update of book is rejected with guidance on how to correctly specify the item to change")
     public void updateRejectedWithGuidance() {
-        assertHttpStatusCode(world.getLastResponse()).isIn(BAD_REQUEST.toInt(), CONFLICT.toInt(), UNPROCESSABLE_ENTITY.toInt());
+        assertHttpStatusCode(world.getLastResponse(), BAD_REQUEST, CONFLICT, UNPROCESSABLE_ENTITY);
     }
 
     @Given("I have removed that book from the bookstore")
@@ -217,10 +217,10 @@ public class BooksSteps {
         if (world.getLastBookPayload() == null) {
             int id = TestData.uniqueId();
             world.setLastBookPayload(TestData.randomBook(id));
-            assertHttpStatusCode(world.getBooksApi().create(world.getLastBookPayload())).isEqualTo(OK.toInt());
+            assertHttpStatusCode(world.getBooksApi().create(world.getLastBookPayload()), OK);
             world.setLastBookId(world.getLastBookPayload().id());
         }
-        assertHttpStatusCode(world.getBooksApi().delete(world.getLastBookId())).isEqualTo(OK.toInt());
+        assertHttpStatusCode(world.getBooksApi().delete(world.getLastBookId()), OK);
     }
 
     @When("I attempt to remove the same book again")
@@ -230,6 +230,6 @@ public class BooksSteps {
 
     @Then("the system informs me the book item is already unavailable and no further changes are made")
     public void systemInformsItemUnavailableOnSecondDelete() {
-        assertHttpStatusCode(world.getLastResponse()).isIn(NOT_FOUND.toInt(), BAD_REQUEST.toInt(), NO_CONTENT.toInt());
+        assertHttpStatusCode(world.getLastResponse(), NOT_FOUND, BAD_REQUEST, NO_CONTENT);
     }
 }
