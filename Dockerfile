@@ -3,4 +3,4 @@ WORKDIR /app
 COPY . .
 RUN chmod +x ./gradlew || true
 ENV BASE_URL=https://fakerestapi.azurewebsites.net
-ENTRYPOINT ["./gradlew","clean","test","--no-daemon","-i"]
+ENTRYPOINT ["./gradlew","--no-daemon","test"]
