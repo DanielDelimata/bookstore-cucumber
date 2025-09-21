@@ -15,7 +15,6 @@ The framework supports local execution, Docker-based execution, and CI/CD integr
 
 ## Quick Start
 
-[//]: # (TODO add screenshots)
 ### Local Execution
 
 ```bash
@@ -52,3 +51,7 @@ The Allure report is published as a GitHub Pages site.
 
 
 URL: https://DanielDelimata.github.io/bookstore-cucumber/
+
+### Screenshot of the report
+
+![Allure Report Screenshot](screenshot.png)
