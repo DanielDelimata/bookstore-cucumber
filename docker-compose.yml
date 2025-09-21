@@ -4,10 +4,11 @@ services:
   api-tests:
     build: .
     environment:
-      - BASE_URL=https://fakerestapi.azurewebsites.net
-      - TEST_ENVIRONMENT=docker
+      BASE_URL: https://fakerestapi.azurewebsites.net
     volumes:
-      - ./reports:/app/reports
+      - ./build/allure-results:/app/build/allure-results
+      - ./build/reports:/app/build/reports
+    command: ./gradlew --no-daemon test allureReport
     networks:
       - test-network
 
@@ -16,7 +17,7 @@ services:
     ports:
       - "8080:80"
     volumes:
-      - ./reports:/usr/share/nginx/html
+      - ./build/reports/allure-report/allureReport:/usr/share/nginx/html
     depends_on:
       - api-tests
     networks:
