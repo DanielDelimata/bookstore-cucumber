@@ -3,7 +3,6 @@ on:
   push:
     branches: [ main ]
   pull_request:
-
   workflow_dispatch:
 
 permissions:
@@ -40,11 +39,10 @@ jobs:
           mkdir -p build/allure-results build/reports
           docker run --rm \
             -e BASE_URL="$BASE_URL" \
-            -v "$PWD/build/allure-results:/app/build/allure-results" \
+            -e ALLURE_RESULTS_DIR="/app/allure-results" \
+            -v "$PWD/build/allure-results:/app/allure-results" \
             -v "$PWD/build/reports:/app/build/reports" \
             bookstore-tests:ci-${{ github.sha }}
-          echo "Host-side Allure results:"
-          ls -la build/allure-results || true
 
       - name: Setup Allure History
         uses: actions/checkout@v4
