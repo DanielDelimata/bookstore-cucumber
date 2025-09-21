@@ -7,7 +7,7 @@ Feature: Happy path for books
     Given I have valid permissions to manage the bookstore
     And I have some unique data of a book
 
-  @smoke @CRUD
+  @smoke @CRUD @list
   Scenario: Fast end-to-end path CRUD
     When I add a new book to the bookstore
     Then the book is visible in the list and in its details
@@ -20,7 +20,7 @@ Feature: Happy path for books
   Scenario: Add a new book
     When I add a new book to the bookstore
     Then I see a confirmation that the book was added
-    And the book details include the standard information expected in the bookstore
+    And the book details include title, description, page count, and publishing date
 
   @regression @read
   Scenario: View an existing book

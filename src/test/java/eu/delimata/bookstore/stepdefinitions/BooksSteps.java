@@ -11,6 +11,7 @@ import io.restassured.path.json.JsonPath;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static eu.delimata.bookstore.enums.HttpCode.BAD_REQUEST;
@@ -68,12 +69,12 @@ public class BooksSteps {
 
     @Then("the book is visible in the list and in its details")
     public void theBookIsVisibleInListAndDetails() {
-        var got = world.getBooksApi().getById(world.getLastBookId()).then().statusCode(OK.toInt()).extract().as(Book.class);
-        assertThat(got.id()).isEqualTo(world.getLastBookPayload().id());
+        Book book = world.getBooksApi().getBookById(world.getLastBookId());
+        assertThat(book.id()).isEqualTo(world.getLastBookPayload().id());
 
-        var listJson = world.getBooksApi().getAll().then().statusCode(OK.toInt()).extract().asString();
-        var jp = JsonPath.from(listJson);
-        var ids = jp.getList("id", Integer.class);
+        String listJson = world.getBooksApi().getAll().then().statusCode(OK.toInt()).extract().asString();
+        JsonPath jp = JsonPath.from(listJson);
+        List<Integer> ids = jp.getList("id", Integer.class);
         assertThat(ids).contains(world.getLastBookId());
     }
 
@@ -94,8 +95,8 @@ public class BooksSteps {
 
     @Then("the changes are visible in the book details")
     public void changesVisibleInBookDetails() {
-        Book got = world.getBooksApi().getById(world.getLastBookId()).then().statusCode(OK.toInt()).extract().as(Book.class);
-        assertThat(got.title()).contains("(2nd ed.)");
+        Book book = world.getBooksApi().getBookById(world.getLastBookId());
+        assertThat(book.title()).contains("(2nd ed.)");
     }
 
     @When("I remove that book from the bookstore")
@@ -114,13 +115,13 @@ public class BooksSteps {
         assertHttpStatusCode(world.getLastResponse()).isEqualTo(OK.toInt());
     }
 
-    @Then("the book details include the standard information expected in the bookstore")
+    @Then("the book details include title, description, page count, and publishing date")
     public void bookDetailsIncludeStandardInformation() {
-        Book got = world.getBooksApi().getById(world.getLastBookId()).then().statusCode(OK.toInt()).extract().as(Book.class);
-        assertThat(got.title()).isNotBlank();
-        assertThat(got.description()).isNotBlank();
-        assertThat(got.pageCount()).isGreaterThan(0);
-        assertThat(got.publishDate()).isNotBlank();
+        Book book = world.getBooksApi().getBookById(world.getLastBookId());
+        assertThat(book.title()).isNotBlank();
+        assertThat(book.description()).isNotBlank();
+        assertThat(book.pageCount()).isGreaterThan(0);
+        assertThat(book.publishDate()).isNotBlank();
     }
 
     @When("I open the details of that book")
@@ -130,8 +131,8 @@ public class BooksSteps {
 
     @Then("the details reflect the information provided when it was added")
     public void detailsReflectInfoProvidedWhenAdded() {
-        Book got = world.getLastResponse().then().statusCode(OK.toInt()).extract().as(Book.class);
-        assertThat(got.title()).isEqualTo(world.getLastBookPayload().title());
+        Book book = world.getLastResponse().then().statusCode(OK.toInt()).extract().as(Book.class);
+        assertThat(book.title()).isEqualTo(world.getLastBookPayload().title());
     }
 
     @When("I change selected information of that book")
@@ -156,10 +157,8 @@ public class BooksSteps {
             case "was already removed" -> {
                 int id = TestData.uniqueId();
                 Book book = TestData.randomBook(id);
-                assertHttpStatusCode(world.getBooksApi().create(book))
-                        .isEqualTo(OK.toInt());
-                assertHttpStatusCode(world.getBooksApi().delete(id))
-                        .isEqualTo(OK.toInt());
+                assertHttpStatusCode(world.getBooksApi().create(book)).isEqualTo(OK.toInt());
+                assertHttpStatusCode(world.getBooksApi().delete(id)).isEqualTo(OK.toInt());
                 idToUse = id;
             }
             case "never existed" -> idToUse = 999_999_999;
@@ -218,8 +217,7 @@ public class BooksSteps {
         if (world.getLastBookPayload() == null) {
             int id = TestData.uniqueId();
             world.setLastBookPayload(TestData.randomBook(id));
-            assertHttpStatusCode(world.getBooksApi().create(world.getLastBookPayload()))
-                    .isEqualTo(OK.toInt());
+            assertHttpStatusCode(world.getBooksApi().create(world.getLastBookPayload())).isEqualTo(OK.toInt());
             world.setLastBookId(world.getLastBookPayload().id());
         }
         assertHttpStatusCode(world.getBooksApi().delete(world.getLastBookId())).isEqualTo(OK.toInt());

@@ -4,6 +4,8 @@ import eu.delimata.bookstore.model.Author;
 import io.qameta.allure.Step;
 import io.restassured.response.Response;
 
+import static eu.delimata.bookstore.enums.HttpCode.OK;
+
 public class AuthorsApi extends BaseApi {
 
     private static final String AUTHORS = "/api/v1/Authors";
@@ -31,5 +33,10 @@ public class AuthorsApi extends BaseApi {
     @Step
     public Response delete(int id) {
         return givenSpec().pathParam("id", id).delete(AUTHORS + "/{id}");
+    }
+
+    @Step
+    public Author getAuthorById(Integer id) {
+        return getById(id).then().statusCode(OK.toInt()).extract().as(Author.class);
     }
 }

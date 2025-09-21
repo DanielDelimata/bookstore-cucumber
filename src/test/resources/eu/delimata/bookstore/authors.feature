@@ -7,7 +7,7 @@ Feature: Happy path for authors
     Given I have valid permissions to manage the bookstore
     And I have some unique data of an author
 
-  @smoke @CRUD
+  @smoke @CRUD @list
   Scenario: Fast end-to-end path CRUD
     When I add a new author to the bookstore
     Then the author is visible in the list and in the author details

@@ -2,6 +2,7 @@ package eu.delimata.bookstore.stepdefinitions;
 
 import eu.delimata.bookstore.BookstoreWorld;
 import eu.delimata.bookstore.model.Author;
+import eu.delimata.bookstore.utils.TestData;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -33,7 +34,7 @@ public class AuthorsSteps {
 
     @And("I have some unique data of an author")
     public void iHaveSomeUniqueDataOfAnAuthor() {
-        int id = (int) (System.currentTimeMillis() / 1000);
+        int id = TestData.uniqueId();
         world.setLastAuthorPayload(new Author(id, id, "John" + id, "Doe" + id));
     }
 
@@ -47,7 +48,7 @@ public class AuthorsSteps {
     @When("I add a new author to the bookstore")
     public void iAddANewAuthor() {
         if (world.getLastAuthorPayload() == null) {
-            int id = (int) (System.currentTimeMillis() / 1000);
+            int id = TestData.uniqueId();
             world.setLastAuthorPayload(new Author(id, id, "John" + id, "Doe" + id));
         }
         world.setLastResponse(world.getAuthorsApi().create(world.getLastAuthorPayload()));
@@ -56,8 +57,8 @@ public class AuthorsSteps {
 
     @Then("the author is visible in the list and in the author details")
     public void authorVisibleInListAndDetails() {
-        Author got = world.getAuthorsApi().getById(world.getLastAuthorId()).then().statusCode(OK.toInt()).extract().as(Author.class);
-        assertThat(got.id()).isEqualTo(world.getLastAuthorPayload().id());
+        Author author = world.getAuthorsApi().getAuthorById(world.getLastAuthorId());
+        assertThat(author.id()).isEqualTo(world.getLastAuthorPayload().id());
 
         String listJson = world.getAuthorsApi().getAll().then().statusCode(OK.toInt()).extract().asString();
         List<Integer> ids = JsonPath.from(listJson).getList("id", Integer.class);
@@ -79,8 +80,8 @@ public class AuthorsSteps {
 
     @Then("the changes are visible in the author details")
     public void changesVisibleInAuthorDetails() {
-        Author got = world.getAuthorsApi().getById(world.getLastAuthorId()).then().statusCode(OK.toInt()).extract().as(Author.class);
-        assertThat(got.firstName()).endsWith("Jr.");
+        Author author = world.getAuthorsApi().getAuthorById(world.getLastAuthorId());
+        assertThat(author.firstName()).endsWith("Jr.");
     }
 
     @When("I remove that author from the bookstore")
@@ -101,9 +102,9 @@ public class AuthorsSteps {
 
     @Then("the author details include the first name and the last name")
     public void authorDetailsIncludeStandardInfo() {
-        Author got = world.getAuthorsApi().getById(world.getLastAuthorId()).then().statusCode(OK.toInt()).extract().as(Author.class);
-        assertThat(got.firstName()).isNotBlank();
-        assertThat(got.lastName()).isNotBlank();
+        Author author = world.getAuthorsApi().getAuthorById(world.getLastAuthorId());
+        assertThat(author.firstName()).isNotBlank();
+        assertThat(author.lastName()).isNotBlank();
     }
 
     @When("I open the details of that author")
@@ -113,9 +114,9 @@ public class AuthorsSteps {
 
     @Then("the details reflect the information provided when the author was added")
     public void detailsReflectWhenAuthorAdded() {
-        Author got = world.getLastResponse().then().statusCode(OK.toInt()).extract().as(Author.class);
-        assertThat(got.firstName()).isEqualTo(world.getLastAuthorPayload().firstName());
-        assertThat(got.lastName()).isEqualTo(world.getLastAuthorPayload().lastName());
+        Author author = world.getLastResponse().then().statusCode(OK.toInt()).extract().as(Author.class);
+        assertThat(author.firstName()).isEqualTo(world.getLastAuthorPayload().firstName());
+        assertThat(author.lastName()).isEqualTo(world.getLastAuthorPayload().lastName());
     }
 
     @When("I change selected information for that author")
@@ -138,7 +139,7 @@ public class AuthorsSteps {
         int idToUse;
         switch (caseDescription.trim()) {
             case "was already removed" -> {
-                int id = (int) (System.currentTimeMillis() / 1000);
+                int id = TestData.uniqueId();
                 Author author = new Author(id, id, "ToRemove" + id, "Delimata");
                 assertHttpStatusCode(world.getBooksApi().create(author)).isEqualTo(OK.toInt());
                 assertHttpStatusCode(world.getBooksApi().delete(id)).isEqualTo(OK.toInt());
@@ -159,7 +160,7 @@ public class AuthorsSteps {
     @When("^I try to add a new author with missing data (.*)$")
     public void tryAddAuthorWithMissing(String missing) {
         Map<String, Object> payload = new HashMap<>();
-        int id = (int) (System.currentTimeMillis() / 1000);
+        int id = TestData.uniqueId();
         payload.put("id", id);
         payload.put("idBook", id);
         payload.put("firstName", "Name" + id);
@@ -181,7 +182,7 @@ public class AuthorsSteps {
 
     @When("I attempt to update the author in an ambiguous or inconsistent way")
     public void attemptAmbiguousAuthorUpdate() {
-        int id = (int) (System.currentTimeMillis() / 1000);
+        int id = TestData.uniqueId();
         var a = new Author(id, id, "Jane" + id, "Doe");
         assertHttpStatusCode(world.getBooksApi().create(a)).isEqualTo(OK.toInt());
 
@@ -197,7 +198,7 @@ public class AuthorsSteps {
 
     @Given("I have removed that author from the bookstore")
     public void removedThatAuthor() {
-        int id = (int) (System.currentTimeMillis() / 1000);
+        int id = TestData.uniqueId();
         Author author = new Author(id, id, "RemoveMe" + id, "Doe");
         assertHttpStatusCode(world.getBooksApi().create(author)).isEqualTo(OK.toInt());
         assertHttpStatusCode(world.getBooksApi().delete(id)).isEqualTo(OK.toInt());
