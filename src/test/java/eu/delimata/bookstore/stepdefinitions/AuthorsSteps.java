@@ -155,7 +155,7 @@ public class AuthorsSteps {
 
     @Then("the system informs me that the author item is not available")
     public void itemNotAvailable() {
-        assertHttpStatusCode(world.getLastResponse(), NOT_FOUND, BAD_REQUEST, NO_CONTENT);
+        assertHttpStatusCode(world.getLastResponse(), NOT_FOUND);
     }
 
     @When("^I try to add a new author with missing data (.*)$")
