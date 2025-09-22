@@ -2,7 +2,6 @@ package eu.delimata.bookstore.stepdefinitions;
 
 import eu.delimata.bookstore.BookstoreWorld;
 import eu.delimata.bookstore.model.Author;
-import eu.delimata.bookstore.support.ResponseAssert;
 import eu.delimata.bookstore.utils.TestData;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -21,7 +20,7 @@ import static eu.delimata.bookstore.enums.HttpCode.NOT_FOUND;
 import static eu.delimata.bookstore.enums.HttpCode.NO_CONTENT;
 import static eu.delimata.bookstore.enums.HttpCode.OK;
 import static eu.delimata.bookstore.enums.HttpCode.UNPROCESSABLE_ENTITY;
-import static eu.delimata.bookstore.support.ResponseAssert.assertHttpStatusCode;
+import static eu.delimata.bookstore.support.ResponseAssert.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
@@ -75,7 +74,7 @@ public class AuthorsSteps {
                 world.getLastAuthorPayload().lastName()
         );
         world.setLastResponse(world.getAuthorsApi().update(world.getLastAuthorId(), updated));
-        ResponseAssert.assertHttpStatusCode(world.getLastResponse(), OK);
+        assertThat(world.getLastResponse()).hasStatusCode(OK);
         world.setLastAuthorPayload(updated);
     }
 
@@ -88,17 +87,17 @@ public class AuthorsSteps {
     @When("I remove that author from the bookstore")
     public void removeThatAuthor() {
         world.setLastResponse(world.getAuthorsApi().delete(world.getLastAuthorId()));
-        ResponseAssert.assertHttpStatusCode(world.getLastResponse(), OK);
+        assertThat(world.getLastResponse()).hasStatusCode(OK);
     }
 
     @Then("the author is no longer available to users")
     public void authorNoLongerAvailable() {
-        ResponseAssert.assertHttpStatusCode(world.getLastResponse(), NOT_FOUND);
+        assertThat(world.getLastResponse()).hasStatusCode(NOT_FOUND);
     }
 
     @Then("I see a confirmation that the author was added")
     public void confirmAuthorAdded() {
-        ResponseAssert.assertHttpStatusCode(world.getLastResponse(), OK);
+        assertThat(world.getLastResponse()).hasStatusCode(OK);
     }
 
     @Then("the author details include the first name and the last name")
@@ -142,8 +141,8 @@ public class AuthorsSteps {
             case "was already removed" -> {
                 int id = TestData.uniqueId();
                 Author author = new Author(id, id, "ToRemove" + id, "Delimata");
-                assertHttpStatusCode(world.getBooksApi().create(author), OK);
-                assertHttpStatusCode(world.getBooksApi().delete(id), OK);
+                assertThat(world.getBooksApi().create(author)).hasStatusCode(OK);
+                assertThat(world.getBooksApi().delete(id)).hasStatusCode(OK);
                 idToUse = id;
             }
             case "never existed" -> idToUse = 987_654_321;
@@ -155,7 +154,7 @@ public class AuthorsSteps {
 
     @Then("the system informs me that the author item is not available")
     public void itemNotAvailable() {
-        assertHttpStatusCode(world.getLastResponse(), NOT_FOUND);
+        assertThat(world.getLastResponse()).hasStatusCode(NOT_FOUND);
     }
 
     @When("^I try to add a new author with missing data (.*)$")
@@ -178,14 +177,14 @@ public class AuthorsSteps {
 
     @Then("the addition of an author is rejected with a clear message indicating which data must be provided")
     public void authorAdditionRejected() {
-        assertHttpStatusCode(world.getLastResponse(), BAD_REQUEST, UNPROCESSABLE_ENTITY);
+        assertThat(world.getLastResponse()).hasStatusCodeIn(BAD_REQUEST, UNPROCESSABLE_ENTITY);
     }
 
     @When("I attempt to update the author in an ambiguous or inconsistent way")
     public void attemptAmbiguousAuthorUpdate() {
         int id = TestData.uniqueId();
         Author author = new Author(id, id, "Jane" + id, "Doe");
-        assertHttpStatusCode(world.getBooksApi().create(author), OK);
+        assertThat(world.getBooksApi().create(author)).hasStatusCode(OK);
 
         Author mismatched = new Author(id + 1, author.idBook(), author.firstName(), author.lastName());
         world.setLastResponse(world.getAuthorsApi().update(id, mismatched));
@@ -194,15 +193,15 @@ public class AuthorsSteps {
 
     @Then("the update of author is rejected with guidance on how to correctly specify the item to change")
     public void authorUpdateRejected() {
-        assertHttpStatusCode(world.getLastResponse(), BAD_REQUEST, CONFLICT, UNPROCESSABLE_ENTITY);
+        assertThat(world.getLastResponse()).hasStatusCodeIn(BAD_REQUEST, CONFLICT, UNPROCESSABLE_ENTITY);
     }
 
     @Given("I have removed that author from the bookstore")
     public void removedThatAuthor() {
         int id = TestData.uniqueId();
         Author author = new Author(id, id, "RemoveMe" + id, "Doe");
-        assertHttpStatusCode(world.getBooksApi().create(author), OK);
-        assertHttpStatusCode(world.getBooksApi().delete(id), OK);
+        assertThat(world.getBooksApi().create(author)).hasStatusCode(OK);
+        assertThat(world.getBooksApi().delete(id)).hasStatusCode(OK);
         world.setLastAuthorId(id);
     }
 
@@ -213,6 +212,6 @@ public class AuthorsSteps {
 
     @Then("the system informs me the author item is already unavailable and no further changes are made")
     public void authorAlreadyUnavailable() {
-        assertHttpStatusCode(world.getLastResponse(), NOT_FOUND, BAD_REQUEST, NO_CONTENT);
+        assertThat(world.getLastResponse()).hasStatusCodeIn(NOT_FOUND, BAD_REQUEST, NO_CONTENT);
     }
 }
