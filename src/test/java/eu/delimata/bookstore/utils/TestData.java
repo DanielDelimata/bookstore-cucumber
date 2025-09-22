@@ -27,7 +27,7 @@ public final class TestData {
     }
 
     /**
-     * Generates a random book title from predefined list.
+     * Generates a random book title using Faker library.
      *
      * @return random book title
      */
@@ -36,7 +36,7 @@ public final class TestData {
     }
 
     /**
-     * Generates a random book description based on templates and subject areas.
+     * Generates a random book description using Faker library.
      *
      * @return random book description
      */
@@ -45,7 +45,7 @@ public final class TestData {
     }
 
     /**
-     * Generates a random page count within realistic ranges for technical books.
+     * Generates a random page count using Faker library.
      *
      * @return random page count between 80 and 800
      */
@@ -55,12 +55,25 @@ public final class TestData {
     }
 
     /**
-     * Generates a random book excerpt from predefined templates.
+     * Generates a random book excerpt using Faker library.
      *
      * @return random book excerpt
      */
     public static String randomExcerpt() {
 
         return FAKER.lorem().paragraph();
+    }
+
+    public static String randomFirstName() {
+        return FAKER.name().firstName();
+    }
+
+    /**
+     * Generates a random last name using Faker library.
+     *
+     * @return random last name
+     */
+    public static String randomLastName() {
+        return FAKER.name().lastName();
     }
 }
