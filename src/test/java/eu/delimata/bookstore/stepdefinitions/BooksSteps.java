@@ -203,17 +203,9 @@ public class BooksSteps {
     }
 
     @Then("I should see that the book is no longer available to users")
-    public void theBookIsNoLongerAvailable() {
-        assertThat(world.getLastResponse()).hasStatusCode(NOT_FOUND);
-    }
-
     @Then("the book no longer appears in search or details")
-    public void bookNoLongerAppearsInSearchOrDetails() {
-        theBookIsNoLongerAvailable();
-    }
-
     @Then("the system informs me that the book item is not available")
-    public void systemInformsItemNotAvailable() {
+    public void theBookIsNoLongerAvailable() {
         assertThat(world.getLastResponse()).hasStatusCode(NOT_FOUND);
     }
 
