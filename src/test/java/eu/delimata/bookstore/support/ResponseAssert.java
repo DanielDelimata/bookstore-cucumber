@@ -11,8 +11,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public final class ResponseAssert  {
 
-    public static final String HTTP_STATUS = "HTTP status";
-
     public static void assertHttpStatusCode(Response response, HttpCode expected) {
         int code = response.getStatusCode();
         HttpCode actual = HttpCode.resolve(code);
@@ -42,7 +40,7 @@ public final class ResponseAssert  {
 
         assertThat(code)
                 .withFailMessage(
-                        "Expected one of [%s], but was %s (%d)",
+                        "Expected HTTP status to be one of [%s], but was %s (%d)",
                         expectedStr,
                         actual != null ? actual.name() : "UNKNOWN",
                         code
