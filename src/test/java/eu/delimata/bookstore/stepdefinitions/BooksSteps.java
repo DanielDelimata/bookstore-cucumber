@@ -2,6 +2,8 @@ package eu.delimata.bookstore.stepdefinitions;
 
 import eu.delimata.bookstore.BookstoreWorld;
 import eu.delimata.bookstore.model.Book;
+import eu.delimata.bookstore.stepdefinitions.builders.BookBuilder;
+import eu.delimata.bookstore.stepdefinitions.builders.BookPayloadBuilder;
 import eu.delimata.bookstore.utils.TestData;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -10,129 +12,83 @@ import io.cucumber.java.en.When;
 import io.restassured.path.json.JsonPath;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static eu.delimata.bookstore.enums.HttpCode.BAD_REQUEST;
-import static eu.delimata.bookstore.enums.HttpCode.CONFLICT;
-import static eu.delimata.bookstore.enums.HttpCode.NOT_FOUND;
-import static eu.delimata.bookstore.enums.HttpCode.NO_CONTENT;
-import static eu.delimata.bookstore.enums.HttpCode.OK;
-import static eu.delimata.bookstore.enums.HttpCode.UNPROCESSABLE_ENTITY;
+import static eu.delimata.bookstore.enums.HttpCode.*;
 import static eu.delimata.bookstore.support.ResponseAssert.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
 public class BooksSteps {
-    
+
     private final BookstoreWorld world;
+    private final BookStepHelpers helpers;
 
     public BooksSteps(BookstoreWorld world) {
         this.world = world;
+        this.helpers = new BookStepHelpers(world);
     }
+
+    // GIVEN steps - Setup/Preparation
 
     @And("I have some unique data of a book")
     public void iHaveSomeUniqueDataOfABook() {
         int id = TestData.uniqueId();
-        world.setLastBookPayload(TestData.randomBook(id));
+        Book book = BookBuilder.aBook()
+                .withId(id)
+                .buildRandom();
+        world.setLastBookPayload(book);
     }
 
     @Given("a book exists in the bookstore")
     public void aBookPreparedExists() {
-        // Use fixed data to simplify validation
-        world.setLastBookPayload(new Book(
-                1,
-                "Book 1", 
-                "Lorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\n", 
-                100,
-                """
+        Book book = BookBuilder.aBook()
+                .withId(1)
+                .withTitle("Book 1")
+                .withDescription("Lorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\n")
+                .withPageCount(100)
+                .withExcerpt("""
                         Lorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\\n
                         Lorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\\n
                         Lorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\\n
                         Lorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\\n
                         Lorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\\n
-                        """,
-                "2025-09-20T08:00:07.7606597+00:00"));
-        world.setLastBookId(world.getLastBookPayload().id());
+                        """)
+                .withPublishDate("2025-09-20T08:00:07.7606597+00:00")
+                .build();
+
+        world.setLastBookPayload(book);
+        world.setLastBookId(book.id());
     }
+
+    @Given("I have removed that book from the bookstore")
+    public void iHaveRemovedThatBook() {
+        helpers.ensureBookExists();
+        helpers.deleteBook(world.getLastBookId());
+    }
+
+    // WHEN steps - Actions
 
     @When("I add a new book to the bookstore")
     public void iAddANewBook() {
-        if (world.getLastBookPayload() == null) {
-            int id = TestData.uniqueId();
-            world.setLastBookPayload(TestData.randomBook(id));
-        }
+        helpers.ensureBookPayloadExists();
         world.setLastResponse(world.getBooksApi().create(world.getLastBookPayload()));
         world.setLastBookId(world.getLastBookPayload().id());
-    }
-
-    @Then("the book is visible in the list and in its details")
-    public void theBookIsVisibleInListAndDetails() {
-        Book book = world.getBooksApi().getBookById(world.getLastBookId());
-        assertThat(book.id()).isEqualTo(world.getLastBookPayload().id());
-
-        String listJson = world.getBooksApi().getAll().then().statusCode(OK.toInt()).extract().asString();
-        JsonPath jp = JsonPath.from(listJson);
-        List<Integer> ids = jp.getList("id", Integer.class);
-        assertThat(ids).contains(world.getLastBookId());
+        log.debug("Added book with ID: {}", world.getLastBookId());
     }
 
     @When("I edit selected information of that book")
     public void iEditSelectedInformationOfBook() {
-        Book updated = new Book(
-                world.getLastBookPayload().id(),
-                world.getLastBookPayload().title() + " (2nd ed.)",
-                world.getLastBookPayload().description(),
-                world.getLastBookPayload().pageCount() + 1,
-                world.getLastBookPayload().excerpt(),
-                world.getLastBookPayload().publishDate()
-        );
+        Book updated = BookBuilder.fromBook(world.getLastBookPayload())
+                .withTitle(world.getLastBookPayload().title() + " (2nd ed.)")
+                .withPageCount(world.getLastBookPayload().pageCount() + 1)
+                .build();
+
         world.setLastResponse(world.getBooksApi().update(world.getLastBookId(), updated));
         assertThat(world.getLastResponse()).hasStatusCode(OK);
         world.setLastBookPayload(updated);
-    }
-
-    @Then("the changes are visible in the book details")
-    public void changesVisibleInBookDetails() {
-        Book book = world.getBooksApi().getBookById(world.getLastBookId());
-        assertThat(book.title()).contains("(2nd ed.)");
-    }
-
-    @When("I remove that book from the bookstore")
-    public void iRemoveThatBook() {
-        world.setLastResponse(world.getBooksApi().delete(world.getLastBookId()));
-        assertThat(world.getLastResponse()).hasStatusCode(OK);
-    }
-
-    @Then("I should see that the book is no longer available to users")
-    public void theBookIsNoLongerAvailable() {
-        assertThat(world.getLastResponse()).hasStatusCode(NOT_FOUND);
-    }
-
-    @Then("I see a confirmation that the book was added")
-    public void iSeeConfirmationBookAdded() {
-        assertThat(world.getLastResponse()).hasStatusCode(OK);
-    }
-
-    @Then("the book details include title, description, page count, and publishing date")
-    public void bookDetailsIncludeStandardInformation() {
-        Book book = world.getBooksApi().getBookById(world.getLastBookId());
-        assertThat(book.title()).isNotBlank();
-        assertThat(book.description()).isNotBlank();
-        assertThat(book.pageCount()).isGreaterThan(0);
-        assertThat(book.publishDate()).isNotBlank();
-    }
-
-    @When("I open the details of that book")
-    public void iOpenDetailsOfThatBook() {
-        world.setLastResponse(world.getBooksApi().getById(world.getLastBookId()));
-    }
-
-    @Then("the details reflect the information provided when it was added")
-    public void detailsReflectInfoProvidedWhenAdded() {
-        Book book = world.getLastResponse().then().statusCode(OK.toInt()).extract().as(Book.class);
-        assertThat(book.title()).isEqualTo(world.getLastBookPayload().title());
+        log.debug("Updated book with ID: {}", world.getLastBookId());
     }
 
     @When("I change selected information of that book")
@@ -140,9 +96,115 @@ public class BooksSteps {
         iEditSelectedInformationOfBook();
     }
 
+    @When("I remove that book from the bookstore")
+    public void iRemoveThatBook() {
+        world.setLastResponse(world.getBooksApi().delete(world.getLastBookId()));
+        assertThat(world.getLastResponse()).hasStatusCode(OK);
+        log.debug("Removed book with ID: {}", world.getLastBookId());
+    }
+
+    @When("I attempt to remove the same book again")
+    public void attemptRemoveSameBookAgain() {
+        world.setLastResponse(world.getBooksApi().delete(world.getLastBookId()));
+        log.debug("Attempted to remove book with ID: {} again", world.getLastBookId());
+    }
+
+    @When("I open the details of that book")
+    public void iOpenDetailsOfThatBook() {
+        world.setLastResponse(world.getBooksApi().getById(world.getLastBookId()));
+    }
+
+    @When("^I try to open the details of a book that (.*)$")
+    public void iTryToOpenDetailsOfNonexistentBook(String caseDescription) {
+        int bookId = helpers.getBookIdForCase(caseDescription.trim());
+        world.setLastResponse(world.getBooksApi().getById(bookId));
+        log.debug("Tried to get details of book with ID: {} (case: {})", bookId, caseDescription);
+    }
+
+    @When("^I try to add a new book with missing data (.*)$")
+    public void iTryToAddBookWithMissingData(String missingField) {
+        Map<String, Object> payload = BookPayloadBuilder.validPayload()
+                .withId(TestData.uniqueId())
+                .remove(missingField.trim())
+                .build();
+
+        world.setLastResponse(world.getBooksApi().create(payload));
+        log.debug("Attempted to add book with missing field: {}", missingField);
+    }
+
+    @When("I attempt to update the book in an ambiguous or inconsistent way")
+    public void attemptAmbiguousUpdate() {
+        Book originalBook = helpers.createAndReturnBook();
+
+        Book mismatchedBook = BookBuilder.fromBook(originalBook)
+                .withId(originalBook.id() + 1) // Mismatched ID
+                .build();
+
+        world.setLastResponse(world.getBooksApi().update(originalBook.id(), mismatchedBook));
+        log.debug("Attempted ambiguous update: path ID {} vs payload ID {}",
+                originalBook.id(), mismatchedBook.id());
+    }
+
+    // THEN steps - Verifications
+
+    @Then("I see a confirmation that the book was added")
+    public void iSeeConfirmationBookAdded() {
+        assertThat(world.getLastResponse()).hasStatusCode(OK);
+    }
+
+    @Then("the book is visible in the list and in its details")
+    public void theBookIsVisibleInListAndDetails() {
+        helpers.verifyBookInDetails();
+        helpers.verifyBookInList();
+    }
+
+    @Then("the book details include title, description, page count, and publishing date")
+    public void bookDetailsIncludeStandardInformation() {
+        Book book = world.getBooksApi().getBookById(world.getLastBookId());
+
+        assertThat(book.title())
+                .as("Book title should not be blank")
+                .isNotBlank();
+        assertThat(book.description())
+                .as("Book description should not be blank")
+                .isNotBlank();
+        assertThat(book.pageCount())
+                .as("Book page count should be greater than 0")
+                .isGreaterThan(0);
+        assertThat(book.publishDate())
+                .as("Book publish date should not be blank")
+                .isNotBlank();
+    }
+
+    @Then("the details reflect the information provided when it was added")
+    public void detailsReflectInfoProvidedWhenAdded() {
+        Book retrievedBook = world.getLastResponse()
+                .then()
+                .statusCode(OK.toInt())
+                .extract()
+                .as(Book.class);
+
+        assertThat(retrievedBook.title())
+                .as("Retrieved book title should match the original")
+                .isEqualTo(world.getLastBookPayload().title());
+    }
+
+    @Then("the changes are visible in the book details")
+    public void changesVisibleInBookDetails() {
+        Book book = world.getBooksApi().getBookById(world.getLastBookId());
+        assertThat(book.title())
+                .as("Updated book title should contain '(2nd ed.)'")
+                .contains("(2nd ed.)");
+    }
+
     @Then("the updated information about the book is visible to users")
     public void updatedInformationVisibleToUsers() {
         changesVisibleInBookDetails();
+    }
+
+    @Then("I should see that the book is no longer available to users")
+    public void theBookIsNoLongerAvailable() {
+        assertThat(world.getLastResponse()).hasStatusCode(NOT_FOUND);
     }
 
     @Then("the book no longer appears in search or details")
@@ -150,86 +212,26 @@ public class BooksSteps {
         theBookIsNoLongerAvailable();
     }
 
-    @When("^I try to open the details of a book that (.*)$")
-    public void iTryToOpenDetailsOfNonexistentBook(String caseDescription) {
-        int idToUse;
-        switch (caseDescription.trim()) {
-            case "was already removed" -> {
-                int id = TestData.uniqueId();
-                Book book = TestData.randomBook(id);
-                assertThat(world.getBooksApi().create(book)).hasStatusCode(OK);
-                assertThat(world.getBooksApi().delete(id)).hasStatusCode(OK);
-                idToUse = id;
-            }
-            case "never existed" -> idToUse = 999_999_999;
-            case "has an invalid identifier" -> idToUse = -1;
-            default -> throw new IllegalArgumentException("Unsupported case: " + caseDescription);
-        }
-        world.setLastResponse(world.getBooksApi().getById(idToUse));
-    }
-
     @Then("the system informs me that the book item is not available")
     public void systemInformsItemNotAvailable() {
         assertThat(world.getLastResponse()).hasStatusCode(NOT_FOUND);
     }
 
-    @When("^I try to add a new book with missing data (.*)$")
-    public void iTryToAddBookWithMissingData(String missing) {
-        Map<String, Object> payload = new HashMap<>();
-        payload.put("id", TestData.uniqueId());
-        payload.put("title", "T");
-        payload.put("description", "D");
-        payload.put("pageCount", 10);
-        payload.put("excerpt", "E");
-        payload.put("publishDate", "2020-01-01T00:00:00.000Z");
-
-        switch (missing.trim()) {
-            case "title" -> payload.remove("title");
-            case "page count" -> payload.remove("pageCount");
-            case "description" -> payload.remove("description");
-            default -> throw new IllegalArgumentException("Unsupported missing field: " + missing);
-        }
-        world.setLastResponse(world.getBooksApi().create(payload));
-    }
-
     @Then("the addition of a book is rejected with a clear message indicating which data must be provided")
     public void additionRejectedWithClearMessage() {
-        assertThat(world.getLastResponse()).hasStatusCodeIn(BAD_REQUEST, UNPROCESSABLE_ENTITY);
-    }
-
-    @When("I attempt to update the book in an ambiguous or inconsistent way")
-    public void attemptAmbiguousUpdate() {
-        int id = TestData.uniqueId();
-        Book book = TestData.randomBook(id);
-        assertThat(world.getBooksApi().create(book)).hasStatusCode(OK);
-
-        Book mismatched = new Book(id + 1, book.title(), book.description(), book.pageCount(), book.excerpt(), book.publishDate());
-        world.setLastResponse(world.getBooksApi().update(id, mismatched));
+        assertThat(world.getLastResponse())
+                .hasStatusCodeIn(BAD_REQUEST, UNPROCESSABLE_ENTITY);
     }
 
     @Then("the update of book is rejected with guidance on how to correctly specify the item to change")
     public void updateRejectedWithGuidance() {
-        assertThat(world.getLastResponse()).hasStatusCodeIn(BAD_REQUEST, CONFLICT, UNPROCESSABLE_ENTITY);
-    }
-
-    @Given("I have removed that book from the bookstore")
-    public void iHaveRemovedThatBook() {
-        if (world.getLastBookPayload() == null) {
-            int id = TestData.uniqueId();
-            world.setLastBookPayload(TestData.randomBook(id));
-            assertThat(world.getBooksApi().create(world.getLastBookPayload())).hasStatusCode(OK);
-            world.setLastBookId(world.getLastBookPayload().id());
-        }
-        assertThat(world.getBooksApi().delete(world.getLastBookId())).hasStatusCode(OK);
-    }
-
-    @When("I attempt to remove the same book again")
-    public void attemptRemoveSameBookAgain() {
-        world.setLastResponse(world.getBooksApi().delete(world.getLastBookId()));
+        assertThat(world.getLastResponse())
+                .hasStatusCodeIn(BAD_REQUEST, CONFLICT, UNPROCESSABLE_ENTITY);
     }
 
     @Then("the system informs me the book item is already unavailable and no further changes are made")
     public void systemInformsItemUnavailableOnSecondDelete() {
-        assertThat(world.getLastResponse()).hasStatusCodeIn(NOT_FOUND, BAD_REQUEST, NO_CONTENT);
+        assertThat(world.getLastResponse())
+                .hasStatusCodeIn(NOT_FOUND, BAD_REQUEST, NO_CONTENT);
     }
 }
